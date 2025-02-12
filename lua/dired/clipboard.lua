@@ -40,6 +40,14 @@ function M.remove_file(fs_t)
     end
 end
 
+function M.remove_clipped_files(action)
+    for i = #M.clipboard, 1, -1 do
+        if M.clipboard[i].action == action then
+            table.remove(M.clipboard, i)
+        end
+    end
+end
+
 -- copy files to current directory
 function M.copy_files(files)
     -- should we check if user is trying to copy paste in the same directory?
@@ -58,14 +66,17 @@ function M.copy_files(files)
 
         -- check #1
         if
-            fs.get_absolute_path(fs.get_parent_path(fs_t.filepath)) ~= fs.get_absolute_path(vim.g.current_dired_path)
+            fs.get_absolute_path(fs.get_parent_path(fs_t.filepath))
+            ~= fs.get_absolute_path(vim.g.current_dired_path)
         then
             -- check #2
             local already_in_cwd = false
             for _, ds_t in ipairs(curren_files) do
                 if fs_t.filename == ds_t.filename then
-                    local prompt =
-                        vim.fn.input(string.format('Overwrite "%s"? {yes,n(o),q(uit)}: ', fs_t.filename), "no")
+                    local prompt = vim.fn.input(
+                        string.format('Overwrite "%s"? {yes,n(o),q(uit)}: ', fs_t.filename),
+                        "no"
+                    )
                     prompt = string.lower(prompt)
                     already_in_cwd = true
                     if string.sub(prompt, 1, 3) == "yes" then
@@ -102,14 +113,17 @@ function M.move_files(files)
 
         -- check #1
         if
-            fs.get_absolute_path(fs.get_parent_path(fs_t.filepath)) ~= fs.get_absolute_path(vim.g.current_dired_path)
+            fs.get_absolute_path(fs.get_parent_path(fs_t.filepath))
+            ~= fs.get_absolute_path(vim.g.current_dired_path)
         then
             -- check #2
             local already_in_cwd = false
             for _, ds_t in ipairs(curren_files) do
                 if fs_t.filename == ds_t.filename then
-                    local prompt =
-                        vim.fn.input(string.format('Overwrite "%s"? {yes,n(o),q(uit)}: ', fs_t.filename), "no")
+                    local prompt = vim.fn.input(
+                        string.format('Overwrite "%s"? {yes,n(o),q(uit)}: ', fs_t.filename),
+                        "no"
+                    )
                     prompt = string.lower(prompt)
                     already_in_cwd = true
                     if string.sub(prompt, 1, 3) == "yes" then

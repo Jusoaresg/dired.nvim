@@ -51,7 +51,8 @@ local CONFIG_SPEC = {
                 return "Must be string of length 1, instead received " .. type(val)
             end
             if #val ~= 1 then
-                return "Must be string of length 1, instead received string of length " .. tostring(#val)
+                return "Must be string of length 1, instead received string of length "
+                    .. tostring(#val)
             end
         end,
     },
@@ -104,6 +105,9 @@ local CONFIG_SPEC = {
             dired_toggle_icons = "*",
             dired_toggle_hide_details = "(",
             dired_quit = "q",
+            --TODO:
+            dired_unmove_all = "x",
+            dired_uncopy_all = "u",
         },
         check = function()
             return {}

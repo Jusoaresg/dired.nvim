@@ -28,6 +28,8 @@ M.toggle_show_icons = dired.toggle_show_icons
 M.toggle_colors = dired.toggle_colors
 M.toggle_hide_details = dired.toggle_hide_details
 
+M.remove_clipped_files = dired.remove_clipped_files
+
 function M.setup(opts)
     -- apply user config
     local errs = config.update(opts)
@@ -116,6 +118,10 @@ function M.setup(opts)
     vim.cmd([[command! DiredToggleHideDetails lua require'dired'.toggle_hide_details()]])
     vim.cmd([[command! DiredQuit lua require'dired'.quit()]])
 
+    --TODO: I need to change this ASAP
+    vim.cmd([[command! DiredUnmoveAll lua require'dired'.remove_clipped_files("move")]])
+    vim.cmd([[command! DiredUncopyAll lua require'dired'.remove_clipped_files("copy")]])
+
     -- setup keybinds
     local map = vim.api.nvim_set_keymap
     local opt = { unique = true, silent = true, noremap = true }
@@ -143,6 +149,10 @@ function M.setup(opts)
     map("", "<Plug>(dired_toggle_hide_details)", ":DiredToggleHideDetails<cr>", opt)
     map("", "<Plug>(dired_quit)", ":DiredQuit<cr>", opt)
 
+    --TODO:
+    map("", "<Plug>(dired_unmove_all)", ":DiredUnmoveAll<cr>", opt)
+    map("", "<Plug>(dired_uncopy_all)", ":DiredUncopyAll<cr>", opt)
+
     if vim.fn.mapcheck("-", "n") == "" and not vim.fn.hasmapto("<Plug>(dired_back)", "n") then
         map("n", "-", "<Plug>(dired_back)", { silent = true })
     end
@@ -161,7 +171,13 @@ function M.setup(opts)
             map(0, "n", config.get("keybinds").dired_rename, "<Plug>(dired_rename)", opt)
             map(0, "n", config.get("keybinds").dired_create, "<Plug>(dired_create)", opt)
             map(0, "n", config.get("keybinds").dired_delete, "<Plug>(dired_delete)", opt)
-            map(0, "v", config.get("keybinds").dired_delete_range, "<Plug>(dired_delete_range)", opt)
+            map(
+                0,
+                "v",
+                config.get("keybinds").dired_delete_range,
+                "<Plug>(dired_delete_range)",
+                opt
+            )
             map(0, "n", config.get("keybinds").dired_copy, "<Plug>(dired_copy)", opt)
             map(0, "v", config.get("keybinds").dired_copy_range, "<Plug>(dired_copy_range)", opt)
             map(0, "n", config.get("keybinds").dired_copy_marked, "<Plug>(dired_copy_marked)", opt)
@@ -171,12 +187,51 @@ function M.setup(opts)
             map(0, "n", config.get("keybinds").dired_paste, "<Plug>(dired_paste)", opt)
             map(0, "n", config.get("keybinds").dired_mark, "<Plug>(dired_mark)", opt)
             map(0, "v", config.get("keybinds").dired_mark_range, "<Plug>(dired_mark_range)", opt)
-            map(0, "n", config.get("keybinds").dired_delete_marked, "<Plug>(dired_delete_marked)", opt)
-            map(0, "n", config.get("keybinds").dired_toggle_hidden, "<Plug>(dired_toggle_hidden)", opt)
-            map(0, "n", config.get("keybinds").dired_toggle_sort_order, "<Plug>(dired_toggle_sort_order)", opt)
-            map(0, "n", config.get("keybinds").dired_toggle_colors, "<Plug>(dired_toggle_colors)", opt)
-            map(0, "n", config.get("keybinds").dired_toggle_icons, "<Plug>(dired_toggle_icons)", opt)
-            map(0, "n", config.get("keybinds").dired_toggle_hide_details, "<Plug>(dired_toggle_hide_details)", opt)
+            --TODO:
+            map(0, "n", config.get("keybinds").dired_unmove_all, "<Plug>(dired_unmove_all)", opt)
+            map(0, "n", config.get("keybinds").dired_uncopy_all, "<Plug>(dired_uncopy_all)", opt)
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_delete_marked,
+                "<Plug>(dired_delete_marked)",
+                opt
+            )
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_toggle_hidden,
+                "<Plug>(dired_toggle_hidden)",
+                opt
+            )
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_toggle_sort_order,
+                "<Plug>(dired_toggle_sort_order)",
+                opt
+            )
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_toggle_colors,
+                "<Plug>(dired_toggle_colors)",
+                opt
+            )
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_toggle_icons,
+                "<Plug>(dired_toggle_icons)",
+                opt
+            )
+            map(
+                0,
+                "n",
+                config.get("keybinds").dired_toggle_hide_details,
+                "<Plug>(dired_toggle_hide_details)",
+                opt
+            )
             map(0, "n", config.get("keybinds").dired_quit, "<Plug>(dired_quit)", opt)
         end,
     })
